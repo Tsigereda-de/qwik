@@ -53,11 +53,11 @@ export default defineConfig(({ command, mode }): UserConfig => {
       },
       proxy: {
         "/api": {
-          target: "http://localhost:3001",
+          target: "http://localhost:3000",
           changeOrigin: true,
         },
         "/graphql": {
-          target: "http://localhost:3001",
+          target: "http://localhost:3000",
           changeOrigin: true,
         },
       },
