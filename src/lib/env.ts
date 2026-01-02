@@ -3,6 +3,24 @@
  * Provides type-safe access to environment variables
  */
 
+/**
+ * Get the redirect URI for Zitadel OAuth
+ * This is a function to avoid accessing window during SSR
+ */
+const getZitadelRedirectUri = (): string => {
+  const configured = import.meta.env.VITE_ZITADEL_REDIRECT_URI;
+  if (configured) {
+    return configured;
+  }
+
+  // Only access window on client side
+  if (typeof window !== 'undefined') {
+    return `${window.location.origin}/auth/callback`;
+  }
+
+  return 'http://localhost:5173/auth/callback';
+};
+
 export const env = {
   // API Endpoints
   graphqlEndpoint: import.meta.env.VITE_GRAPHQL_ENDPOINT || 'http://localhost:3001/graphql',
@@ -12,7 +30,9 @@ export const env = {
   // Zitadel OAuth
   zitadelApiUrl: import.meta.env.VITE_ZITADEL_API_URL || '',
   zitadelClientId: import.meta.env.VITE_ZITADEL_CLIENT_ID || '',
-  zitadelRedirectUri: import.meta.env.VITE_ZITADEL_REDIRECT_URI || `${window?.location?.origin || 'http://localhost:5173'}/auth/callback`,
+  get zitadelRedirectUri(): string {
+    return getZitadelRedirectUri();
+  },
 
   // Matrix Chat
   matrixHomeserverUrl: import.meta.env.VITE_MATRIX_HOMESERVER_URL || '',
