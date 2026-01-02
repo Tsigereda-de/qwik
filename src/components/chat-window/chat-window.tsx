@@ -1,14 +1,13 @@
-import { component$, useSignal, useVisibleTask$, $ } from '@builder.io/qwik';
-import { getMatrixClient } from '~/lib/matrix-client';
+import { component$, useSignal, useVisibleTask$ } from '@builder.io/qwik';
+import { getMatrixClient, type MatrixMessage } from '~/lib/matrix-client';
 import { authService } from '~/lib/auth';
-import type { MatrixMessage } from '~/lib/matrix-client';
 import styles from './chat-window.module.css';
 
 interface ChatWindowProps {
-  roomId: string;
+  roomName?: string;
 }
 
-export default component$<ChatWindowProps>(({ roomId }) => {
+export default component$<ChatWindowProps>(({ roomName = 'general' }) => {
   const messages = useSignal<MatrixMessage[]>([]);
   const messageInput = useSignal('');
   const loading = useSignal(true);
@@ -18,18 +17,21 @@ export default component$<ChatWindowProps>(({ roomId }) => {
   useVisibleTask$(async () => {
     try {
       const client = getMatrixClient();
+      const authState = authService.getAuthState();
+
+      if (!authState.isAuthenticated || !authState.accessToken || !authState.user?.id) {
+        throw new Error('User must be authenticated to access chat');
+      }
+
+      // Initialize client with user credentials
+      await client.init(authState.user.id, authState.accessToken);
+
+      // Join or create room
+      await client.joinOrCreateRoom(roomName);
 
       // Load initial messages
       const initialMessages = await client.loadMessages(30);
       messages.value = initialMessages;
-
-      // Subscribe to message updates
-      const updateHandler = $(
-        (updatedMessages: MatrixMessage[]) => {
-          messages.value = updatedMessages;
-        }
-      );
-      client.onMessagesUpdate(updateHandler);
     } catch (err) {
       error.value = err instanceof Error ? err.message : 'Failed to load messages';
       console.error('Failed to load messages:', err);
@@ -38,7 +40,7 @@ export default component$<ChatWindowProps>(({ roomId }) => {
     }
   });
 
-  const sendMessage = $(async () => {
+  const sendMessage$ = $(async () => {
     if (!messageInput.value.trim()) {
       return;
     }
@@ -48,6 +50,10 @@ export default component$<ChatWindowProps>(({ roomId }) => {
       const client = getMatrixClient();
       await client.sendMessage(messageInput.value);
       messageInput.value = '';
+
+      // Reload messages after sending
+      const updatedMessages = await client.loadMessages(30);
+      messages.value = updatedMessages;
     } catch (err) {
       error.value = err instanceof Error ? err.message : 'Failed to send message';
       console.error('Failed to send message:', err);
@@ -56,14 +62,12 @@ export default component$<ChatWindowProps>(({ roomId }) => {
     }
   });
 
-  const handleKeyDown = $(
-    async (event: KeyboardEvent) => {
-      if (event.key === 'Enter' && !event.shiftKey) {
-        event.preventDefault();
-        await sendMessage();
-      }
+  const handleKeyDown$ = $(async (event: KeyboardEvent) => {
+    if (event.key === 'Enter' && !event.shiftKey) {
+      event.preventDefault();
+      await sendMessage$();
     }
-  );
+  });
 
   const currentUser = authService.getAuthState().user;
 
@@ -120,13 +124,13 @@ export default component$<ChatWindowProps>(({ roomId }) => {
           onInput$={(event) => {
             messageInput.value = (event.target as HTMLTextAreaElement).value;
           }}
-          onKeyDown$={handleKeyDown}
+          onKeyDown$={handleKeyDown$}
           disabled={sending.value}
           rows={3}
         />
         <button
           class={styles.sendButton}
-          onClick$={sendMessage}
+          onClick$={sendMessage$}
           disabled={sending.value || !messageInput.value.trim()}
         >
           {sending.value ? 'Sending...' : 'Send'}

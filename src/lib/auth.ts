@@ -71,13 +71,9 @@ export const authService = {
    */
   async initiateLogin(): Promise<void> {
     try {
-      const response = await fetch(`${env.apiBaseUrl}/auth/zitadel-login`);
-      const data = await response.json();
-
-      if (data.authUrl) {
-        window.location.href = data.authUrl;
-      } else {
-        throw new Error('Failed to get authorization URL');
+      // Backend will redirect to Zitadel authorization endpoint
+      if (typeof window !== 'undefined') {
+        window.location.href = `${env.payloadApiUrl}/api/auth/zitadel/login`;
       }
     } catch (error) {
       console.error('Login initiation failed:', error);
@@ -87,48 +83,55 @@ export const authService = {
 
   /**
    * Handle OAuth callback
+   * Called after Zitadel redirects back to the app
    */
-  async handleCallback(code: string, state: string): Promise<AuthState> {
+  async handleCallback(): Promise<AuthState> {
     try {
-      const response = await fetch(`${env.apiBaseUrl}/auth/zitadel-callback`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ code, state }),
-      });
-
-      if (!response.ok) {
-        throw new Error('Authentication failed');
+      if (typeof window === 'undefined') {
+        throw new Error('Window is not available');
       }
 
-      const data = await response.json();
+      // Extract tokens from URL parameters
+      const params = new URLSearchParams(window.location.search);
+      const accessToken = params.get('access_token');
+      const idToken = params.get('id_token');
+      const refreshToken = params.get('refresh_token');
+      const userId = params.get('user_id');
+      const error = params.get('error');
+      const errorDescription = params.get('error_description');
+
+      if (error) {
+        throw new Error(`Authentication failed: ${errorDescription || error}`);
+      }
+
+      if (!accessToken || !userId) {
+        throw new Error('Missing authentication tokens in callback');
+      }
 
       // Store tokens and user info
-      if (typeof window !== 'undefined') {
-        localStorage.setItem(TOKEN_KEY, data.accessToken);
-        if (data.refreshToken) {
-          localStorage.setItem(REFRESH_TOKEN_KEY, data.refreshToken);
-        }
-
-        const authState: AuthState = {
-          isAuthenticated: true,
-          accessToken: data.accessToken,
-          idToken: data.idToken,
-          refreshToken: data.refreshToken,
-          user: {
-            id: data.userInfo.sub || '',
-            email: data.userInfo.email || '',
-            name: data.userInfo.name || '',
-            picture: data.userInfo.picture,
-          },
-        };
-
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(authState));
-        return authState;
+      localStorage.setItem(TOKEN_KEY, accessToken);
+      if (refreshToken) {
+        localStorage.setItem(REFRESH_TOKEN_KEY, refreshToken);
       }
 
-      throw new Error('Window is not available');
+      const authState: AuthState = {
+        isAuthenticated: true,
+        accessToken,
+        idToken: idToken || undefined,
+        refreshToken: refreshToken || undefined,
+        user: {
+          id: userId,
+          email: '', // Will be loaded from user query
+          name: '',
+        },
+      };
+
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(authState));
+
+      // Clean up URL
+      window.history.replaceState({}, document.title, window.location.pathname);
+
+      return authState;
     } catch (error) {
       console.error('Callback handling failed:', error);
       throw error;

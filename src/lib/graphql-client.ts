@@ -19,7 +19,7 @@ interface GraphQLResponse<T = unknown> {
 const validateGraphQLEndpoint = (): { valid: boolean; message?: string } => {
   const endpoint = env.graphqlEndpoint;
 
-  if (!endpoint || endpoint === 'http://localhost:3001/graphql') {
+  if (!endpoint || endpoint === '') {
     return {
       valid: false,
       message: 'GraphQL endpoint is not configured. Please set VITE_GRAPHQL_ENDPOINT environment variable to your Payload CMS GraphQL API URL.',
