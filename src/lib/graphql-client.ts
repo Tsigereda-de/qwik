@@ -14,6 +14,22 @@ interface GraphQLResponse<T = unknown> {
 }
 
 /**
+ * Validate that GraphQL endpoint is properly configured
+ */
+const validateGraphQLEndpoint = (): { valid: boolean; message?: string } => {
+  const endpoint = env.graphqlEndpoint;
+
+  if (!endpoint || endpoint === 'http://localhost:3001/graphql') {
+    return {
+      valid: false,
+      message: 'GraphQL endpoint is not configured. Please set VITE_GRAPHQL_ENDPOINT environment variable to your Payload CMS GraphQL API URL.',
+    };
+  }
+
+  return { valid: true };
+};
+
+/**
  * GraphQL client for querying Payload CMS
  */
 export const graphqlClient = {
@@ -24,6 +40,11 @@ export const graphqlClient = {
     request: GraphQLRequest,
     token?: string
   ): Promise<GraphQLResponse<T>> {
+    const validation = validateGraphQLEndpoint();
+    if (!validation.valid) {
+      throw new Error(validation.message);
+    }
+
     const headers: Record<string, string> = {
       'Content-Type': 'application/json',
     };
@@ -47,7 +68,16 @@ export const graphqlClient = {
       const data = await response.json();
       return data as GraphQLResponse<T>;
     } catch (error) {
-      console.error('GraphQL request failed:', error);
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      console.error('GraphQL request failed:', errorMessage);
+
+      // Provide more helpful error messages
+      if (errorMessage.includes('Failed to fetch')) {
+        throw new Error(
+          'Unable to connect to the GraphQL API. Make sure the Payload CMS backend is running and VITE_GRAPHQL_ENDPOINT is correctly configured.'
+        );
+      }
+
       throw error;
     }
   },
