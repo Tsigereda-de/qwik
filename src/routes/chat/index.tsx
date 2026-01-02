@@ -1,4 +1,4 @@
-import { component$, useSignal, useEffect$ } from '@builder.io/qwik';
+import { component$, useSignal, useVisibleTask$ } from '@builder.io/qwik';
 import type { DocumentHead } from '@builder.io/qwik-city';
 import { useNavigate } from '@builder.io/qwik-city';
 import { authService } from '~/lib/auth';
@@ -14,7 +14,7 @@ export default component$(() => {
   const error = useSignal<string | null>(null);
   const roomId = useSignal<string | null>(null);
 
-  useEffect$(async () => {
+  useVisibleTask$(async () => {
     const authState = authService.getAuthState();
 
     if (!authState.isAuthenticated) {

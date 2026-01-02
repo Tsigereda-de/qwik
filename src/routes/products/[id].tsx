@@ -1,4 +1,4 @@
-import { component$, useSignal, useEffect$ } from '@builder.io/qwik';
+import { component$, useSignal, useVisibleTask$ } from '@builder.io/qwik';
 import type { DocumentHead } from '@builder.io/qwik-city';
 import { useLocation, useNavigate } from '@builder.io/qwik-city';
 import { getProductById, type Product } from '~/lib/graphql-client';
@@ -16,7 +16,7 @@ export default component$(() => {
 
   const productId = location.params.id;
 
-  useEffect$(async () => {
+  useVisibleTask$(async () => {
     try {
       const token = authService.getAccessToken();
       const data = await getProductById(productId, token);

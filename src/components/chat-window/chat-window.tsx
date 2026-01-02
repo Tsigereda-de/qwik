@@ -1,4 +1,4 @@
-import { component$, useSignal, useEffect$, $ } from '@builder.io/qwik';
+import { component$, useSignal, useVisibleTask$, $ } from '@builder.io/qwik';
 import { getMatrixClient } from '~/lib/matrix-client';
 import { authService } from '~/lib/auth';
 import type { MatrixMessage } from '~/lib/matrix-client';
@@ -15,7 +15,7 @@ export default component$<ChatWindowProps>(({ roomId }) => {
   const sending = useSignal(false);
   const error = useSignal<string | null>(null);
 
-  useEffect$(async () => {
+  useVisibleTask$(async () => {
     try {
       const client = getMatrixClient();
 
@@ -29,7 +29,7 @@ export default component$<ChatWindowProps>(({ roomId }) => {
           messages.value = updatedMessages;
         }
       );
-      client.onMessagesUpdate(updatedHandler);
+      client.onMessagesUpdate(updateHandler);
     } catch (err) {
       error.value = err instanceof Error ? err.message : 'Failed to load messages';
       console.error('Failed to load messages:', err);

@@ -1,4 +1,4 @@
-import { component$, useEffect$ } from '@builder.io/qwik';
+import { component$, useVisibleTask$ } from '@builder.io/qwik';
 import { useLocation, useNavigate } from '@builder.io/qwik-city';
 import { authService } from '~/lib/auth';
 
@@ -6,7 +6,7 @@ export default component$(() => {
   const location = useLocation();
   const nav = useNavigate();
 
-  useEffect$(async () => {
+  useVisibleTask$(async () => {
     const params = new URLSearchParams(location.url.search);
     const code = params.get('code');
     const state = params.get('state');

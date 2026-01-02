@@ -1,4 +1,4 @@
-import { component$, useSignal, useEffect$ } from '@builder.io/qwik';
+import { component$, useSignal, useVisibleTask$ } from '@builder.io/qwik';
 import type { DocumentHead } from '@builder.io/qwik-city';
 import { getProducts, type Product } from '~/lib/graphql-client';
 import { authService } from '~/lib/auth';
@@ -11,7 +11,7 @@ export default component$(() => {
   const loading = useSignal(true);
   const error = useSignal<string | null>(null);
 
-  useEffect$(async () => {
+  useVisibleTask$(async () => {
     try {
       const token = authService.getAccessToken();
       const data = await getProducts(token);
