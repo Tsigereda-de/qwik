@@ -3,17 +3,17 @@ import { CollectionConfig } from 'payload/types';
 const Users: CollectionConfig = {
   slug: 'users',
   auth: {
-    // Zitadel OIDC integration will be configured here
-    // This allows users authenticated via Zitadel to access Payload
+    // Zitadel OIDC integration is configured at the app level
     useAPIKey: true,
     depth: 0,
   },
   admin: {
     useAsTitle: 'email',
+    defaultColumns: ['email', 'name', 'role', 'createdAt'],
   },
   access: {
     read: ({ req }) => {
-      // Allow admins to read all users, users can read themselves
+      // Allow reading own user or if admin
       if (req.user?.role === 'admin') {
         return true;
       }
@@ -22,8 +22,8 @@ const Users: CollectionConfig = {
       };
     },
     create: async ({ req }) => {
-      // Only admins can create users
-      return req.user?.role === 'admin';
+      // Only admins can create users (or during registration)
+      return req.user?.role === 'admin' || !req.user;
     },
     update: async ({ req }) => {
       // Users can update themselves, admins can update anyone
@@ -60,6 +60,14 @@ const Users: CollectionConfig = {
         { label: 'User', value: 'user' },
       ],
       defaultValue: 'user',
+      index: true,
+    },
+    {
+      name: 'avatar',
+      type: 'text',
+      admin: {
+        description: 'URL to user avatar image',
+      },
     },
     {
       name: 'zitadelId',
@@ -68,6 +76,7 @@ const Users: CollectionConfig = {
       index: true,
       admin: {
         hidden: true,
+        description: 'Zitadel user ID for OIDC integration',
       },
     },
     {
@@ -75,14 +84,17 @@ const Users: CollectionConfig = {
       type: 'json',
       admin: {
         hidden: true,
+        description: 'Cached Zitadel user profile data',
       },
     },
     {
       name: 'active',
       type: 'checkbox',
       defaultValue: true,
+      index: true,
     },
   ],
+  timestamps: true,
 };
 
 export default Users;

@@ -1,39 +1,85 @@
 import express from 'express';
 import cors from 'cors';
 import payload from 'payload';
-import { createRequire } from 'module';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
-const require = createRequire(import.meta.url);
+const filename = fileURLToPath(import.meta.url);
+const dirname = path.dirname(filename);
 
 const app = express();
 
-// Middleware
+// CORS Configuration
+const allowedOrigins = (process.env.CORS_ORIGIN || 'http://localhost:5173').split(',');
+
 app.use(
   cors({
-    origin: (process.env.CORS_ORIGIN || 'http://localhost:5173').split(','),
+    origin: (origin, callback) => {
+      if (!origin || allowedOrigins.some(o => origin.includes(o.trim()))) {
+        callback(null, true);
+      } else {
+        callback(new Error('Not allowed by CORS'));
+      }
+    },
     credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
   })
 );
 
-app.use(express.json());
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ limit: '10mb', extended: true }));
+
+// Health check endpoint
+app.get('/health', (req, res) => {
+  res.json({ status: 'ok', message: 'Payload CMS is running' });
+});
 
 // Initialize Payload
 const start = async () => {
-  await payload.init({
-    secret: process.env.PAYLOAD_SECRET || 'default-secret-key',
-    mongoURL: process.env.DATABASE_URI || 'mongodb://localhost/payload',
-    express: app,
-    onInit: async () => {
-      payload.logger.info(`Payload CMS Admin URL: ${process.env.ADMIN_URL}`);
-      payload.logger.info(`GraphQL Endpoint: http://localhost:${process.env.PORT}${process.env.GRAPHQL_ENDPOINT}`);
-    },
-  });
+  try {
+    await payload.init({
+      secret: process.env.PAYLOAD_SECRET || 'dev-secret-key',
+      mongoURL: process.env.MONGODB_URI || 'mongodb://localhost:27017/payload',
+      express: app,
+      onInit: async () => {
+        console.log('✅ Payload CMS initialized successfully');
+        console.log(`📊 Admin Panel: ${process.env.PAYLOAD_PUBLIC_SERVER_URL}/admin`);
+        console.log(`🚀 GraphQL Endpoint: ${process.env.PAYLOAD_PUBLIC_SERVER_URL}/api/graphql`);
+        console.log(`🔌 REST API: ${process.env.PAYLOAD_PUBLIC_SERVER_URL}/api`);
+      },
+    });
+
+    // Additional error handling
+    app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
+      console.error('Error:', err);
+      res.status(err.status || 500).json({
+        error: err.message || 'Internal Server Error',
+        ...(process.env.NODE_ENV === 'development' && { stack: err.stack }),
+      });
+    });
+  } catch (error) {
+    console.error('❌ Failed to initialize Payload:', error);
+    process.exit(1);
+  }
 };
 
 start();
 
 const PORT = process.env.PORT || 3001;
 
-app.listen(PORT, () => {
-  console.log(`Payload CMS server running on http://localhost:${PORT}`);
+const server = app.listen(PORT, () => {
+  console.log(`\n🌍 Payload CMS Server running on http://localhost:${PORT}`);
+  console.log(`Press Ctrl+C to stop\n`);
 });
+
+// Graceful shutdown
+process.on('SIGINT', async () => {
+  console.log('\n📴 Shutting down gracefully...');
+  server.close(() => {
+    console.log('✅ Server closed');
+    process.exit(0);
+  });
+});
+
+export default app;

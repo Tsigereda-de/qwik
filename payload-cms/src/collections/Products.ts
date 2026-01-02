@@ -4,7 +4,7 @@ const Products: CollectionConfig = {
   slug: 'products',
   admin: {
     useAsTitle: 'title',
-    defaultColumns: ['title', 'description', 'variantsCount', 'createdAt'],
+    defaultColumns: ['title', 'price', 'status', 'createdAt'],
   },
   access: {
     read: () => true, // Everyone can read products
@@ -20,26 +20,65 @@ const Products: CollectionConfig = {
       index: true,
     },
     {
+      name: 'slug',
+      type: 'text',
+      unique: true,
+      index: true,
+      admin: {
+        position: 'sidebar',
+      },
+    },
+    {
       name: 'description',
       type: 'richText',
       required: true,
     },
     {
-      name: 'basePrice',
+      name: 'price',
       type: 'number',
       required: true,
       min: 0,
+      admin: {
+        description: 'Product base price in USD',
+      },
     },
     {
       name: 'image',
-      type: 'upload',
-      relationTo: 'media',
+      type: 'text',
+      admin: {
+        description: 'Image URL for product',
+      },
+    },
+    {
+      name: 'imageAlt',
+      type: 'text',
+      admin: {
+        description: 'Alt text for product image',
+      },
+    },
+    {
+      name: 'category',
+      type: 'text',
+      index: true,
+    },
+    {
+      name: 'tags',
+      type: 'array',
+      fields: [
+        {
+          name: 'tag',
+          type: 'text',
+        },
+      ],
     },
     {
       name: 'variants',
       type: 'array',
       required: true,
       minRows: 1,
+      admin: {
+        description: 'Product variants (colors, sizes, etc.)',
+      },
       fields: [
         {
           name: 'sku',
@@ -52,20 +91,32 @@ const Products: CollectionConfig = {
           name: 'name',
           type: 'text',
           required: true,
+          admin: {
+            description: 'e.g., "Red - Size M"',
+          },
         },
         {
           name: 'color',
           type: 'text',
+          admin: {
+            description: 'Variant color',
+          },
         },
         {
           name: 'size',
           type: 'text',
+          admin: {
+            description: 'Variant size',
+          },
         },
         {
           name: 'price',
           type: 'number',
           required: true,
           min: 0,
+          admin: {
+            description: 'Variant-specific price override',
+          },
         },
         {
           name: 'stock',
@@ -82,37 +133,27 @@ const Products: CollectionConfig = {
       ],
     },
     {
-      name: 'category',
-      type: 'text',
-    },
-    {
-      name: 'tags',
-      type: 'array',
-      fields: [
-        {
-          name: 'tag',
-          type: 'text',
-        },
-      ],
-    },
-    {
       name: 'featured',
       type: 'checkbox',
       defaultValue: false,
       index: true,
+      admin: {
+        description: 'Feature this product on homepage',
+      },
+    },
+    {
+      name: 'status',
+      type: 'select',
+      options: [
+        { label: 'Draft', value: 'draft' },
+        { label: 'Published', value: 'published' },
+        { label: 'Archived', value: 'archived' },
+      ],
+      defaultValue: 'published',
+      index: true,
     },
   ],
-  hooks: {
-    afterRead: [
-      async ({ doc }) => {
-        // Add computed field for variants count
-        if (doc && doc.variants) {
-          doc.variantsCount = doc.variants.length;
-        }
-        return doc;
-      },
-    ],
-  },
+  timestamps: true,
 };
 
 export default Products;
