@@ -72,12 +72,19 @@ export const authService = {
   async initiateLogin(): Promise<void> {
     try {
       const response = await fetch(`${env.apiBaseUrl}/auth/zitadel-login`);
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error(`Login initiation failed with status ${response.status}:`, errorText);
+        throw new Error(`Failed to initiate login: ${response.status} ${response.statusText}`);
+      }
+
       const data = await response.json();
 
       if (data.authUrl) {
         window.location.href = data.authUrl;
       } else {
-        throw new Error('Failed to get authorization URL');
+        throw new Error('Failed to get authorization URL: ' + JSON.stringify(data));
       }
     } catch (error) {
       console.error('Login initiation failed:', error);
