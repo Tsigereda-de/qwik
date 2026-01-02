@@ -71,24 +71,47 @@ export const authService = {
    */
   async initiateLogin(): Promise<void> {
     try {
-      const response = await fetch(`${env.apiBaseUrl}/auth/zitadel-login`);
+      const url = `${env.apiBaseUrl}/auth/zitadel-login`;
+      console.log('[Auth] Initiating login, calling:', url);
+      
+      const response = await fetch(url);
 
       if (!response.ok) {
-        const errorText = await response.text();
-        console.error(`Login initiation failed with status ${response.status}:`, errorText);
-        throw new Error(`Failed to initiate login: ${response.status} ${response.statusText}`);
+        const contentType = response.headers.get('content-type');
+        let errorText = '';
+        
+        if (contentType && contentType.includes('application/json')) {
+          try {
+            const errorData = await response.json();
+            errorText = errorData.details || errorData.error || response.statusText;
+          } catch {
+            errorText = await response.text();
+          }
+        } else {
+          errorText = await response.text();
+        }
+        
+        throw new Error(`HTTP ${response.status}: ${errorText}`);
+      }
+
+      // Check if response has content
+      const contentLength = response.headers.get('content-length');
+      if (contentLength === '0') {
+        throw new Error('Empty response from login endpoint');
       }
 
       const data = await response.json();
 
-      if (data.authUrl) {
-        window.location.href = data.authUrl;
-      } else {
-        throw new Error('Failed to get authorization URL: ' + JSON.stringify(data));
+      if (!data.authUrl) {
+        throw new Error('Invalid response: missing authUrl');
       }
+
+      console.log('[Auth] Login URL obtained, redirecting...');
+      window.location.href = data.authUrl;
     } catch (error) {
-      console.error('Login initiation failed:', error);
-      throw error;
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      console.error('[Auth] Login initiation failed:', errorMessage);
+      throw new Error(`Login failed: ${errorMessage}`);
     }
   },
 
