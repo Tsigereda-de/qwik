@@ -1,4 +1,4 @@
-import { component$, useSignal, useEffect$ } from '@builder.io/qwik';
+import { component$, useSignal, useVisibleTask$ } from '@builder.io/qwik';
 import { Link } from '@builder.io/qwik-city';
 import { authService } from '~/lib/auth';
 import styles from './header.module.css';
@@ -7,7 +7,7 @@ export default component$(() => {
   const isAuthenticated = useSignal(false);
   const userName = useSignal<string>('');
 
-  useEffect$(() => {
+  useVisibleTask$(() => {
     const authState = authService.getAuthState();
     isAuthenticated.value = authState.isAuthenticated;
     userName.value = authState.user?.name || authState.user?.email || '';
