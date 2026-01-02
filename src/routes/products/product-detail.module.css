@@ -1,0 +1,285 @@
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+}
+
+.backLink {
+  background: none;
+  border: none;
+  color: #4b5563;
+  font-size: 1rem;
+  cursor: pointer;
+  padding: 0;
+  margin-bottom: 2rem;
+  transition: color 0.2s;
+}
+
+.backLink:hover {
+  color: #000;
+  text-decoration: underline;
+}
+
+.content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3rem;
+  align-items: start;
+}
+
+.imageSection {
+  position: sticky;
+  top: 100px;
+}
+
+.image {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+}
+
+.imagePlaceholder {
+  width: 100%;
+  aspect-ratio: 1;
+  background-color: #f3f4f6;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #9ca3af;
+  font-size: 1.1rem;
+}
+
+.detailsSection {
+  padding: 1rem 0;
+}
+
+.title {
+  font-size: 2rem;
+  font-weight: 700;
+  margin: 0 0 0.5rem 0;
+  line-height: 1.2;
+}
+
+.category {
+  color: #6b7280;
+  font-size: 0.95rem;
+  text-transform: capitalize;
+  margin: 0 0 1.5rem 0;
+}
+
+.description {
+  margin-bottom: 2rem;
+}
+
+.description h3 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.description p {
+  color: #4b5563;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.variantsSection {
+  margin-bottom: 2rem;
+}
+
+.variantsSection h3 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.variantsList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.variantButton {
+  padding: 1rem;
+  border: 2px solid #e5e7eb;
+  background-color: #fff;
+  border-radius: 6px;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.2s;
+}
+
+.variantButton:hover:not(:disabled) {
+  border-color: #000;
+}
+
+.variantActive {
+  border-color: #000;
+  background-color: #f9fafb;
+}
+
+.variantButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background-color: #f9fafb;
+}
+
+.variantName {
+  font-weight: 600;
+  color: #000;
+  margin-bottom: 0.25rem;
+}
+
+.variantColor {
+  font-size: 0.9rem;
+  color: #6b7280;
+}
+
+.variantSize {
+  font-size: 0.9rem;
+  color: #6b7280;
+}
+
+.variantDetails {
+  background-color: #f9fafb;
+  padding: 1.5rem;
+  border-radius: 8px;
+  margin-bottom: 2rem;
+}
+
+.priceSection,
+.stockSection {
+  margin-bottom: 1.5rem;
+}
+
+.label {
+  font-size: 0.9rem;
+  color: #6b7280;
+  margin: 0 0 0.25rem 0;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.price {
+  font-size: 2rem;
+  font-weight: 700;
+  margin: 0;
+  color: #000;
+}
+
+.stock {
+  font-size: 1rem;
+  color: #10b981;
+  margin: 0;
+  font-weight: 500;
+}
+
+.outOfStock {
+  color: #ef4444;
+}
+
+.addToCartButton {
+  width: 100%;
+  padding: 1rem;
+  background-color: #000;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.addToCartButton:hover:not(:disabled) {
+  background-color: #333;
+}
+
+.addToCartButton:disabled {
+  background-color: #d1d5db;
+  cursor: not-allowed;
+}
+
+.tags {
+  margin-top: 2rem;
+  padding-top: 2rem;
+  border-top: 1px solid #e5e7eb;
+}
+
+.tags h3 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.tagsList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.tag {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  background-color: #e5e7eb;
+  border-radius: 999px;
+  font-size: 0.9rem;
+  color: #4b5563;
+}
+
+.error {
+  padding: 2rem;
+  text-align: center;
+  background-color: #fee;
+  border: 1px solid #fcc;
+  border-radius: 8px;
+}
+
+.error h2 {
+  color: #c00;
+  margin-top: 0;
+}
+
+.error p {
+  color: #c00;
+  margin-bottom: 1rem;
+}
+
+.backButton {
+  padding: 0.75rem 1.5rem;
+  background-color: #000;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.backButton:hover {
+  background-color: #333;
+}
+
+@media (max-width: 768px) {
+  .content {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+
+  .imageSection {
+    position: static;
+  }
+
+  .title {
+    font-size: 1.5rem;
+  }
+
+  .price {
+    font-size: 1.5rem;
+  }
+
+  .variantsList {
+    max-height: 300px;
+    overflow-y: auto;
+  }
+}
