@@ -38,7 +38,18 @@ export default component$(() => {
 
         {error.value && (
           <div class={styles.error}>
-            <p>Error: {error.value}</p>
+            <h3>⚠️ Configuration Error</h3>
+            <p>{error.value}</p>
+            <div class={styles.setupGuide}>
+              <h4>To fix this:</h4>
+              <ol>
+                <li>Set up the Payload CMS backend (see SETUP_GUIDE.md)</li>
+                <li>Configure the <code>VITE_GRAPHQL_ENDPOINT</code> environment variable</li>
+                <li>Restart the development server</li>
+              </ol>
+              <p><strong>For development:</strong> Run <code>cd payload-cms && npm run dev</code> in another terminal</p>
+              <p><strong>Endpoint should be:</strong> <code>http://localhost:3001/graphql</code> (development) or your production URL</p>
+            </div>
           </div>
         )}
 
