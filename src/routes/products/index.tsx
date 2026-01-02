@@ -47,7 +47,7 @@ export default component$(() => {
                 <li>Configure the <code>VITE_GRAPHQL_ENDPOINT</code> environment variable</li>
                 <li>Restart the development server</li>
               </ol>
-              <p><strong>For development:</strong> Run <code>cd payload-qwik && npm run dev</code> in another terminal</p>
+              <p><strong>For development:</strong> Run <code>cd payload-cms && npm run dev</code> in another terminal</p>
               <p><strong>Endpoint should be:</strong> <code>http://localhost:3001/graphql</code> (development) or your production URL</p>
             </div>
           </div>

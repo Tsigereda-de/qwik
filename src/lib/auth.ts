@@ -71,67 +71,94 @@ export const authService = {
    */
   async initiateLogin(): Promise<void> {
     try {
-      // Backend will redirect to Zitadel authorization endpoint
-      if (typeof window !== 'undefined') {
-        window.location.href = `${env.payloadApiUrl}/api/auth/zitadel/login`;
+      const url = `${env.apiBaseUrl}/auth/zitadel-login`;
+      console.log('[Auth] Initiating login, calling:', url);
+      
+      const response = await fetch(url);
+
+      if (!response.ok) {
+        const contentType = response.headers.get('content-type');
+        let errorText = '';
+        
+        if (contentType && contentType.includes('application/json')) {
+          try {
+            const errorData = await response.json();
+            errorText = errorData.details || errorData.error || response.statusText;
+          } catch {
+            errorText = await response.text();
+          }
+        } else {
+          errorText = await response.text();
+        }
+        
+        throw new Error(`HTTP ${response.status}: ${errorText}`);
       }
+
+      // Check if response has content
+      const contentLength = response.headers.get('content-length');
+      if (contentLength === '0') {
+        throw new Error('Empty response from login endpoint');
+      }
+
+      const data = await response.json();
+
+      if (!data.authUrl) {
+        throw new Error('Invalid response: missing authUrl');
+      }
+
+      console.log('[Auth] Login URL obtained, redirecting...');
+      window.location.href = data.authUrl;
     } catch (error) {
-      console.error('Login initiation failed:', error);
-      throw error;
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      console.error('[Auth] Login initiation failed:', errorMessage);
+      throw new Error(`Login failed: ${errorMessage}`);
     }
   },
 
   /**
    * Handle OAuth callback
-   * Called after Zitadel redirects back to the app
    */
-  async handleCallback(): Promise<AuthState> {
+  async handleCallback(code: string, state: string): Promise<AuthState> {
     try {
-      if (typeof window === 'undefined') {
-        throw new Error('Window is not available');
+      const response = await fetch(`${env.apiBaseUrl}/auth/zitadel-callback`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ code, state }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Authentication failed');
       }
 
-      // Extract tokens from URL parameters
-      const params = new URLSearchParams(window.location.search);
-      const accessToken = params.get('access_token');
-      const idToken = params.get('id_token');
-      const refreshToken = params.get('refresh_token');
-      const userId = params.get('user_id');
-      const error = params.get('error');
-      const errorDescription = params.get('error_description');
-
-      if (error) {
-        throw new Error(`Authentication failed: ${errorDescription || error}`);
-      }
-
-      if (!accessToken || !userId) {
-        throw new Error('Missing authentication tokens in callback');
-      }
+      const data = await response.json();
 
       // Store tokens and user info
-      localStorage.setItem(TOKEN_KEY, accessToken);
-      if (refreshToken) {
-        localStorage.setItem(REFRESH_TOKEN_KEY, refreshToken);
+      if (typeof window !== 'undefined') {
+        localStorage.setItem(TOKEN_KEY, data.accessToken);
+        if (data.refreshToken) {
+          localStorage.setItem(REFRESH_TOKEN_KEY, data.refreshToken);
+        }
+
+        const authState: AuthState = {
+          isAuthenticated: true,
+          accessToken: data.accessToken,
+          idToken: data.idToken,
+          refreshToken: data.refreshToken,
+          user: {
+            id: data.userInfo.sub || '',
+            email: data.userInfo.email || '',
+            name: data.userInfo.name || '',
+            picture: data.userInfo.picture,
+          },
+        };
+
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(authState));
+        return authState;
       }
 
-      const authState: AuthState = {
-        isAuthenticated: true,
-        accessToken,
-        idToken: idToken || undefined,
-        refreshToken: refreshToken || undefined,
-        user: {
-          id: userId,
-          email: '', // Will be loaded from user query
-          name: '',
-        },
-      };
-
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(authState));
-
-      // Clean up URL
-      window.history.replaceState({}, document.title, window.location.pathname);
-
-      return authState;
+      throw new Error('Window is not available');
     } catch (error) {
       console.error('Callback handling failed:', error);
       throw error;

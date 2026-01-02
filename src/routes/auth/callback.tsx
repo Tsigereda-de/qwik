@@ -7,9 +7,19 @@ export default component$(() => {
   const nav = useNavigate();
 
   useVisibleTask$(async () => {
+    const params = new URLSearchParams(location.url.search);
+    const code = params.get('code');
+    const state = params.get('state');
+
+    if (!code) {
+      // No code provided, redirect to home
+      nav('/');
+      return;
+    }
+
     try {
-      // Handle the OAuth callback - extracts tokens from URL params
-      await authService.handleCallback();
+      // Handle the OAuth callback
+      await authService.handleCallback(code, state || '');
       // Redirect to products or dashboard
       nav('/products');
     } catch (error) {

@@ -144,7 +144,8 @@ export const POST = async (request: Request) => {
     return Response.json({
       success: true,
       user: finalUser.docs[0],
-      token: tokenData.access_token,
+      accessToken: tokenData.access_token,
+      idToken: tokenData.id_token,
       refreshToken: tokenData.refresh_token,
       expiresIn: tokenData.expires_in,
     })

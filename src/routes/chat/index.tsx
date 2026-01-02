@@ -2,6 +2,7 @@ import { component$, useSignal, useVisibleTask$ } from '@builder.io/qwik';
 import type { DocumentHead } from '@builder.io/qwik-city';
 import { useNavigate } from '@builder.io/qwik-city';
 import { authService } from '~/lib/auth';
+import { getMatrixClient } from '~/lib/matrix-client';
 import Header from '~/components/header/header';
 import ChatWindow from '~/components/chat-window/chat-window';
 import styles from './chat.module.css';
@@ -9,6 +10,9 @@ import styles from './chat.module.css';
 export default component$(() => {
   const navigate = useNavigate();
   const isAuthenticated = useSignal(false);
+  const loading = useSignal(true);
+  const error = useSignal<string | null>(null);
+  const roomId = useSignal<string | null>(null);
 
   useVisibleTask$(async () => {
     const authState = authService.getAuthState();
@@ -19,6 +23,30 @@ export default component$(() => {
     }
 
     isAuthenticated.value = true;
+
+    try {
+      const client = getMatrixClient();
+      const token = authService.getAccessToken();
+
+      if (!token || !authState.user?.id) {
+        throw new Error('Authentication required for chat');
+      }
+
+      // Initialize Matrix client
+      await client.init(authState.user.id, token);
+
+      // Join or create a general chat room
+      const id = await client.joinOrCreateRoom('general');
+      roomId.value = id;
+
+      // Load initial messages
+      await client.loadMessages(20);
+    } catch (err) {
+      error.value = err instanceof Error ? err.message : 'Failed to initialize chat';
+      console.error('Chat initialization error:', err);
+    } finally {
+      loading.value = false;
+    }
   });
 
   if (!isAuthenticated.value) {
@@ -30,7 +58,22 @@ export default component$(() => {
       <Header />
       <div class={styles.container}>
         <h1>Community Chat</h1>
-        <ChatWindow roomName="general" />
+
+        {loading.value && (
+          <div class={styles.loading}>
+            <p>Initializing chat...</p>
+          </div>
+        )}
+
+        {error.value && (
+          <div class={styles.error}>
+            <p>Error: {error.value}</p>
+          </div>
+        )}
+
+        {!loading.value && roomId.value && (
+          <ChatWindow roomId={roomId.value} />
+        )}
       </div>
     </>
   );
