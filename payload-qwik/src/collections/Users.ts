@@ -7,7 +7,27 @@ export const Users: CollectionConfig = {
   },
   auth: true,
   fields: [
-    // Email added by default
-    // Add more fields as needed
+    {
+      name: 'name',
+      type: 'text',
+      required: false,
+    },
+    {
+      name: 'zitadelId',
+      type: 'text',
+      unique: true,
+      index: true,
+      required: false,
+    },
+    {
+      name: 'zitadelProfile',
+      type: 'json',
+      required: false,
+    },
+    {
+      name: 'isActive',
+      type: 'checkbox',
+      defaultValue: true,
+    },
   ],
 }
