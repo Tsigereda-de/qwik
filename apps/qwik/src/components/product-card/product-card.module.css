@@ -93,24 +93,31 @@
 
 .title {
   font-size: 1rem;
-  font-weight: 600;
+  font-weight: 700;
   margin: 0 0 0.5rem 0;
   line-height: 1.5;
-  color: #0f172a;
+  color: #165b33;
 }
 
 .category {
   font-size: 0.8rem;
-  color: #6b7280;
+  color: #c41e3a;
   margin: 0 0 0.75rem 0;
   text-transform: capitalize;
-  font-weight: 500;
+  font-weight: 600;
+  background: #fff9e6;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  display: inline-block;
 }
 
 .price {
-  font-size: 1.35rem;
-  font-weight: 700;
-  color: #0f172a;
+  font-size: 1.5rem;
+  font-weight: 800;
+  background: linear-gradient(90deg, #c41e3a 0%, #165b33 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
   margin: 0.5rem 0 0.75rem 0;
 }
 
