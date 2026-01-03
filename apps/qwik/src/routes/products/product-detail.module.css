@@ -171,29 +171,30 @@
 
 .priceSection,
 .stockSection {
-  margin-bottom: 1.5rem;
+  margin-bottom: 1.75rem;
 }
 
 .label {
-  font-size: 0.9rem;
+  font-size: 0.75rem;
   color: #6b7280;
-  margin: 0 0 0.25rem 0;
+  margin: 0 0 0.375rem 0;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.08em;
+  font-weight: 600;
 }
 
 .price {
-  font-size: 2rem;
+  font-size: 2.25rem;
   font-weight: 700;
   margin: 0;
-  color: #000;
+  color: #0f172a;
 }
 
 .stock {
-  font-size: 1rem;
+  font-size: 1.05rem;
   color: #10b981;
   margin: 0;
-  font-weight: 500;
+  font-weight: 600;
 }
 
 .outOfStock {
@@ -202,23 +203,28 @@
 
 .addToCartButton {
   width: 100%;
-  padding: 1rem;
-  background-color: #000;
+  padding: 1.125rem;
+  background: linear-gradient(135deg, #0f172a 0%, #1a3a52 100%);
   color: #fff;
   border: none;
-  border-radius: 6px;
+  border-radius: 8px;
   font-weight: 600;
   font-size: 1rem;
   cursor: pointer;
-  transition: background-color 0.2s;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .addToCartButton:hover:not(:disabled) {
-  background-color: #333;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.15);
+}
+
+.addToCartButton:active:not(:disabled) {
+  transform: translateY(0);
 }
 
 .addToCartButton:disabled {
-  background-color: #d1d5db;
+  background: linear-gradient(135deg, #d1d5db 0%, #cbd5e1 100%);
   cursor: not-allowed;
 }
 
