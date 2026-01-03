@@ -9,59 +9,78 @@ export default component$(() => {
     <>
       <Header />
       <div class={styles.hero}>
+        <div class={styles.snowflakes}>
+          <div class={styles.snowflake}>❄</div>
+          <div class={styles.snowflake}>❄</div>
+          <div class={styles.snowflake}>❄</div>
+          <div class={styles.snowflake}>❄</div>
+          <div class={styles.snowflake}>❄</div>
+        </div>
         <div class={styles.heroContent}>
-          <h1>Welcome to Qwik Store</h1>
+          <div class={styles.christmasEmoji}>🎄 ✨ 🎅</div>
+          <h1>Holiday Shopping Magic</h1>
           <p>
-            A modern e-commerce platform built with Qwik, Payload CMS, and real-time chat powered by Matrix.
+            Discover our curated collection of premium gifts, festive decorations, and holiday essentials. Make this season special with exclusive deals and fast delivery!
           </p>
           <div class={styles.ctaButtons}>
             <Link href="/products" class={styles.primaryButton}>
-              Browse Products
+              🛍️ Shop Now
             </Link>
             <Link href="/chat" class={styles.secondaryButton}>
-              Join Chat
+              💬 Get Help
             </Link>
           </div>
         </div>
       </div>
 
       <section class={styles.featuresSection}>
-        <h2>Features</h2>
+        <h2>Why Choose Us</h2>
         <div class={styles.featuresList}>
           <div class={styles.featureCard}>
-            <h3>Progressive Web App</h3>
-            <p>Install as an app and use offline with PWA capabilities.</p>
+            <div class={styles.featureEmoji}>🚚</div>
+            <h3>Fast Holiday Delivery</h3>
+            <p>Express shipping available for all orders. Get your gifts in time for the holidays!</p>
           </div>
           <div class={styles.featureCard}>
-            <h3>Product Variants</h3>
-            <p>Browse products with multiple variants (colors, sizes, etc.).</p>
+            <div class={styles.featureEmoji}>💎</div>
+            <h3>Premium Selection</h3>
+            <p>Hand-picked gifts and holiday items from trusted brands. Quality you can trust.</p>
           </div>
           <div class={styles.featureCard}>
-            <h3>Secure Authentication</h3>
-            <p>OAuth2/OIDC authentication through Zitadel.</p>
+            <div class={styles.featureEmoji}>🔒</div>
+            <h3>Safe & Secure</h3>
+            <p>Bank-level encryption protects your data. Shop with confidence this season.</p>
           </div>
           <div class={styles.featureCard}>
-            <h3>Real-time Chat</h3>
-            <p>Connect with other users in the community chat using Matrix.</p>
+            <div class={styles.featureEmoji}>⭐</div>
+            <h3>24/7 Support</h3>
+            <p>Our friendly team is here to help. Real-time chat support during holidays.</p>
           </div>
         </div>
       </section>
 
       <section class={styles.infoSection}>
-        <h2>Technology Stack</h2>
+        <h2>Our Promise This Holiday Season</h2>
         <div class={styles.techStack}>
           <div class={styles.techItem}>
-            <strong>Frontend:</strong> Qwik with PWA support
+            <strong>🎁 Exclusive Deals:</strong> Up to 50% off on selected holiday items
           </div>
           <div class={styles.techItem}>
-            <strong>Backend:</strong> Payload CMS with GraphQL API
+            <strong>📦 Smart Shipping:</strong> Free shipping on orders over $50 this season
           </div>
           <div class={styles.techItem}>
-            <strong>Authentication:</strong> Zitadel OAuth2/OIDC
+            <strong>💳 Flexible Payment:</strong> Multiple payment options including installments
           </div>
           <div class={styles.techItem}>
-            <strong>Chat:</strong> Matrix with matrix-js-sdk
+            <strong>🎉 Loyalty Rewards:</strong> Earn points on every purchase
           </div>
+        </div>
+      </section>
+
+      <section class={styles.festiveSection}>
+        <div class={styles.festiveContent}>
+          <h2>Season's Greetings! 🎄</h2>
+          <p>Join thousands of happy customers celebrating the holidays with us. Thank you for making this season special!</p>
         </div>
       </section>
     </>
@@ -69,11 +88,11 @@ export default component$(() => {
 });
 
 export const head: DocumentHead = {
-  title: "Qwik Store - Modern E-commerce Platform",
+  title: "Holiday Shop - Premium Gifts & Festive Decorations",
   meta: [
     {
       name: "description",
-      content: "A modern e-commerce website built with Qwik, Payload CMS, and Zitadel authentication with real-time Matrix chat.",
+      content: "Shop premium holiday gifts, festive decorations, and seasonal essentials. Fast delivery, secure checkout, and 24/7 support.",
     },
   ],
 };
