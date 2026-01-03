@@ -126,24 +126,24 @@
 
 .variantButton {
   padding: 1.125rem;
-  border: 1.5px solid #e5e7eb;
-  background: linear-gradient(135deg, #fff 0%, #f9fafb 100%);
-  border-radius: 8px;
+  border: 2px solid #c41e3a;
+  background: linear-gradient(135deg, #fff 0%, #fef5f0 100%);
+  border-radius: 10px;
   cursor: pointer;
   text-align: left;
   transition: all 0.3s ease;
 }
 
 .variantButton:hover:not(:disabled) {
-  border-color: #0f172a;
+  border-color: #ffd700;
   background: #fff;
-  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.08);
+  box-shadow: 0 4px 12px rgba(196, 30, 58, 0.12);
 }
 
 .variantActive {
-  border-color: #0f172a;
-  background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%);
-  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.1);
+  border-color: #ffd700;
+  background: linear-gradient(135deg, #fff9e6 0%, #fef5f0 100%);
+  box-shadow: 0 4px 12px rgba(196, 30, 58, 0.15);
 }
 
 .variantButton:disabled {
