@@ -237,34 +237,53 @@
 
 @media (max-width: 768px) {
   .hero {
-    padding: 3rem 1rem;
+    padding: 4rem 1rem;
     min-height: auto;
   }
 
   .heroContent h1 {
-    font-size: 2rem;
+    font-size: 2.25rem;
   }
 
   .heroContent p {
-    font-size: 1rem;
+    font-size: 1.05rem;
   }
 
   .ctaButtons {
     flex-direction: column;
+    gap: 0.75rem;
   }
 
   .primaryButton,
   .secondaryButton {
     width: 100%;
+    padding: 0.875rem 2rem;
+  }
+
+  .featuresSection,
+  .infoSection {
+    padding: 0 1rem;
   }
 
   .featuresSection h2,
   .infoSection h2 {
-    font-size: 1.75rem;
+    font-size: 2rem;
   }
 
   .featuresList {
     grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+
+  .featureCard {
+    padding: 1.75rem;
+  }
+
+  .techStack {
     gap: 1rem;
+  }
+
+  .techItem {
+    padding: 1.5rem;
   }
 }
