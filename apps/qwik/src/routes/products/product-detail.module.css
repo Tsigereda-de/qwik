@@ -91,18 +91,19 @@
 
 .description h3 {
   font-size: 1.05rem;
-  font-weight: 600;
+  font-weight: 700;
   margin-bottom: 0.75rem;
-  color: #0f172a;
+  color: #c41e3a;
   text-transform: uppercase;
   letter-spacing: 0.05em;
   font-size: 0.9rem;
 }
 
 .description p {
-  color: #4b5563;
+  color: #165b33;
   line-height: 1.7;
   margin: 0;
+  font-weight: 500;
 }
 
 .variantsSection {
