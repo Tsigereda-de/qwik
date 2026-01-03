@@ -1,4 +1,7 @@
 import { getPayload } from 'payload'
+import { cookies as nextCookies } from 'next/headers'
+import { NextResponse } from 'next/server'
+import { Agent } from 'undici'
 import config from '@payload-config'
 
 interface ZitadelTokenResponse {
@@ -64,23 +67,79 @@ export const POST = async (request: Request) => {
       )
     }
 
-    // Exchange code for tokens
-    const tokenResponse = await fetch(
-      `${zitadelApiUrl}/oauth/v2/token`,
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
-        },
-        body: new URLSearchParams({
-          grant_type: 'authorization_code',
-          code,
-          client_id: clientId,
-          code_verifier: codeVerifier,
-          redirect_uri: redirectUri,
-        }).toString(),
+    // Force IPv4 and add timeouts to avoid hanging network calls
+    const ipv4Agent = new Agent({
+      connect: {
+        family: 4,
+        timeout: 10_000,
       },
-    )
+    })
+
+    const isRetryableNetworkError = (err: unknown): boolean => {
+      if (!err || typeof err !== 'object') return false
+      const anyErr = err as { code?: string; cause?: { code?: string } }
+      const code = anyErr.code ?? anyErr.cause?.code
+      return (
+        code === 'ECONNRESET' ||
+        code === 'ETIMEDOUT' ||
+        code === 'EAI_AGAIN' ||
+        code === 'ENETUNREACH'
+      )
+    }
+
+    // Exchange code for tokens (retry transient network failures)
+    const tokenUrl = `${zitadelApiUrl}/oauth/v2/token`
+    const tokenBody = new URLSearchParams({
+      grant_type: 'authorization_code',
+      code,
+      client_id: clientId,
+      code_verifier: codeVerifier,
+      redirect_uri: redirectUri,
+    }).toString()
+
+    let tokenResponse: Response | undefined
+    let lastError: unknown
+
+    for (let attempt = 1; attempt <= 3; attempt++) {
+      const controller = new AbortController()
+      const timeoutId = setTimeout(() => controller.abort(), 12_000)
+
+      try {
+        tokenResponse = await fetch(tokenUrl, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+          },
+          body: tokenBody,
+          dispatcher: ipv4Agent,
+          signal: controller.signal,
+        })
+        clearTimeout(timeoutId)
+        break
+      } catch (err) {
+        clearTimeout(timeoutId)
+        lastError = err
+
+        if (err instanceof Error && err.name === 'AbortError') {
+          console.error('Token exchange aborted (timeout)')
+          return Response.json({ error: 'Token exchange timeout' }, { status: 504 })
+        }
+
+        if (attempt < 3 && isRetryableNetworkError(err)) {
+          console.error(`Token exchange fetch failed (attempt ${attempt}/3):`, err)
+          await new Promise((r) => setTimeout(r, 250 * attempt))
+          continue
+        }
+
+        console.error('Token exchange fetch failed:', err)
+        return Response.json({ error: 'Token exchange failed' }, { status: 502 })
+      }
+    }
+
+    if (!tokenResponse) {
+      console.error('Token exchange failed (no response):', lastError)
+      return Response.json({ error: 'Token exchange failed' }, { status: 502 })
+    }
 
     if (!tokenResponse.ok) {
       console.error('Token exchange failed:', await tokenResponse.text())
@@ -90,17 +149,25 @@ export const POST = async (request: Request) => {
       )
     }
 
-    const tokenData = (await tokenResponse.json()) as ZitadelTokenResponse
+    const rawToken = await tokenResponse.text()
+    let tokenData: ZitadelTokenResponse
+    try {
+      tokenData = JSON.parse(rawToken) as ZitadelTokenResponse
+    } catch (err) {
+      console.error('Failed to parse token response:', rawToken, err)
+      return Response.json(
+        { error: 'Invalid token response' },
+        { status: 502 },
+      )
+    }
 
     // Get user info
-    const userInfoResponse = await fetch(
-      `${zitadelApiUrl}/oauth/v2/userinfo`,
-      {
-        headers: {
-          Authorization: `Bearer ${tokenData.access_token}`,
-        },
+    const userInfoResponse = await fetch(`${zitadelApiUrl}/oauth/v2/userinfo`, {
+      headers: {
+        Authorization: `Bearer ${tokenData.access_token}`,
       },
-    )
+      dispatcher: ipv4Agent,
+    })
 
     if (!userInfoResponse.ok) {
       console.error('User info fetch failed:', await userInfoResponse.text())

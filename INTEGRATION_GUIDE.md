@@ -90,13 +90,13 @@ This is a **fully integrated e-commerce system** with:
 ### 1. Install Dependencies
 
 ```bash
-# Install frontend dependencies
-npm install
-
 # Install backend dependencies
-cd payload-qwik
-npm install
-cd ..
+cd apps/payload
+pnpm install
+
+# Install frontend dependencies
+cd ../qwik
+pnpm install
 ```
 
 ### 2. Set Up MongoDB
@@ -127,22 +127,21 @@ sudo systemctl start mongod
 
 ### 3. Configure Environment Variables
 
-**Backend** (payload-qwik/.env):
+**Backend** (apps/payload/.env):
 ```env
 DATABASE_URL=mongodb://admin:password@localhost:27017/qwik-payload-store?authSource=admin
 PAYLOAD_SECRET=your-super-secret-32-character-key-minimum-32-chars!
-ZITADEL_API_URL=https://us1.zitadel.cloud
+ZITADEL_API_URL=https://qwik-4xolvg.us1.zitadel.cloud
 ZITADEL_CLIENT_ID=353170497439257993
-ZITADEL_CLIENT_SECRET=your-zitadel-client-secret
-ZITADEL_REDIRECT_URI=http://localhost:3000/api/auth/zitadel/callback
+ZITADEL_REDIRECT_URI=http://localhost:5173/auth/callback
 ```
 
-**Frontend** (.env.local):
+**Frontend** (apps/qwik/.env.local):
 ```env
-VITE_GRAPHQL_ENDPOINT=http://localhost:3000/graphql
-VITE_PAYLOAD_API_URL=http://localhost:3000
-VITE_API_BASE_URL=http://localhost:3000/api
-VITE_ZITADEL_API_URL=https://us1.zitadel.cloud
+VITE_GRAPHQL_ENDPOINT=/api/graphql
+VITE_PAYLOAD_API_URL=/api
+VITE_API_BASE_URL=/api
+VITE_ZITADEL_API_URL=https://qwik-4xolvg.us1.zitadel.cloud
 VITE_ZITADEL_CLIENT_ID=353170497439257993
 VITE_ZITADEL_REDIRECT_URI=http://localhost:5173/auth/callback
 VITE_MATRIX_HOMESERVER_URL=https://matrix.org
@@ -151,15 +150,16 @@ VITE_MATRIX_HOMESERVER_URL=https://matrix.org
 ### 4. Start Backend (Terminal 1)
 
 ```bash
-cd payload-qwik
-npm run dev
+cd apps/payload
+pnpm dev
 # Output: Payload CMS running on http://localhost:3000
 ```
 
 ### 5. Start Frontend (Terminal 2)
 
 ```bash
-npm run dev
+cd apps/qwik
+pnpm dev
 # Output: http://localhost:5173/
 ```
 
@@ -185,8 +185,8 @@ npm run dev
 
 #### Step 1: Install Dependencies
 ```bash
-cd payload-qwik
-npm install
+cd apps/payload
+pnpm install
 ```
 
 #### Step 2: Configure Database
@@ -200,19 +200,18 @@ PAYLOAD_SECRET=your-secure-key-minimum-32-chars
 Get from your Zitadel instance:
 1. Log in to Zitadel console
 2. Create OAuth2 application
-3. Set redirect URI: `http://localhost:3000/api/auth/zitadel/callback`
+3. Set redirect URI: `http://localhost:5173/auth/callback`
 4. Copy credentials to `.env`:
 
 ```env
 ZITADEL_API_URL=https://your-zitadel-instance.com
 ZITADEL_CLIENT_ID=your-client-id
-ZITADEL_CLIENT_SECRET=your-client-secret
-ZITADEL_REDIRECT_URI=http://localhost:3000/api/auth/zitadel/callback
+ZITADEL_REDIRECT_URI=http://localhost:5173/auth/callback
 ```
 
 #### Step 4: Start Development Server
 ```bash
-npm run dev
+pnpm dev
 # Server will be available at http://localhost:3000
 ```
 
@@ -225,15 +224,17 @@ npm run dev
 
 #### Step 1: Install Dependencies
 ```bash
-npm install
+cd apps/qwik
+pnpm install
 ```
 
 #### Step 2: Configure Environment
-Create `.env.local` file in root:
+Create `.env.local` file in `apps/qwik/`:
 ```env
-VITE_GRAPHQL_ENDPOINT=http://localhost:3000/graphql
-VITE_PAYLOAD_API_URL=http://localhost:3000
-VITE_ZITADEL_API_URL=https://your-zitadel-instance.com
+VITE_GRAPHQL_ENDPOINT=/api/graphql
+VITE_PAYLOAD_API_URL=/api
+VITE_API_BASE_URL=/api
+VITE_ZITADEL_API_URL=https://qwik-4xolvg.us1.zitadel.cloud
 VITE_ZITADEL_CLIENT_ID=your-client-id
 VITE_ZITADEL_REDIRECT_URI=http://localhost:5173/auth/callback
 VITE_MATRIX_HOMESERVER_URL=https://matrix.org
@@ -241,7 +242,7 @@ VITE_MATRIX_HOMESERVER_URL=https://matrix.org
 
 #### Step 3: Start Development Server
 ```bash
-npm run dev
+pnpm dev
 # Frontend will be available at http://localhost:5173
 ```
 
@@ -251,7 +252,7 @@ npm run dev
 
 ### Environment Variables Reference
 
-#### Backend (.env in payload-qwik/)
+#### Backend (.env in apps/payload/)
 
 | Variable | Required | Description | Example |
 |----------|----------|-------------|---------|
@@ -260,18 +261,18 @@ npm run dev
 | NODE_ENV | ❌ | Environment (development/production) | `development` |
 | ZITADEL_API_URL | ✅ | Zitadel instance URL | `https://zitadel.example.com` |
 | ZITADEL_CLIENT_ID | ✅ | OAuth client ID | `123456789...` |
-| ZITADEL_CLIENT_SECRET | ✅ | OAuth client secret | `secret-key...` |
-| ZITADEL_REDIRECT_URI | ✅ | OAuth callback URL | `http://localhost:3000/api/auth/zitadel/callback` |
+| ZITADEL_CLIENT_SECRET | ❌ | OAuth client secret (not used for PKCE) | `secret-key...` |
+| ZITADEL_REDIRECT_URI | ✅ | OAuth callback URL | `http://localhost:5173/auth/callback` |
 | PAYLOAD_PUBLIC_SERVER_URL | ❌ | Frontend-facing server URL | `http://localhost:3000` |
 | PAYLOAD_GRAPHQL_URL | ❌ | GraphQL endpoint URL | `http://localhost:3000/graphql` |
 
-#### Frontend (.env.local in root/)
+#### Frontend (.env.local in apps/qwik/)
 
 | Variable | Required | Description | Example |
 |----------|----------|-------------|---------|
-| VITE_GRAPHQL_ENDPOINT | ✅ | GraphQL API endpoint | `http://localhost:3000/graphql` |
-| VITE_PAYLOAD_API_URL | ✅ | Backend base URL | `http://localhost:3000` |
-| VITE_API_BASE_URL | ✅ | API routes base | `http://localhost:3000/api` |
+| VITE_GRAPHQL_ENDPOINT | ✅ | GraphQL API endpoint | `/api/graphql` |
+| VITE_PAYLOAD_API_URL | ✅ | Backend base URL | `/api` |
+| VITE_API_BASE_URL | ✅ | API routes base | `/api` |
 | VITE_ZITADEL_API_URL | ✅ | Zitadel instance URL | `https://zitadel.example.com` |
 | VITE_ZITADEL_CLIENT_ID | ✅ | OAuth client ID | `123456789...` |
 | VITE_ZITADEL_REDIRECT_URI | ✅ | OAuth callback URL | `http://localhost:5173/auth/callback` |
@@ -304,28 +305,30 @@ mongodb://admin:password@mongo:27017/qwik-payload-store?authSource=admin
 
 **Terminal 1 - Backend:**
 ```bash
-cd payload-qwik
-npm run dev
+cd apps/payload
+pnpm dev
 ```
 
 **Terminal 2 - Frontend:**
 ```bash
-npm run dev
+cd apps/qwik
+pnpm dev
 ```
 
 ### Build for Production
 
 **Backend:**
 ```bash
-cd payload-qwik
-npm run build
-npm start
+cd apps/payload
+pnpm run build
+pnpm start
 ```
 
 **Frontend:**
 ```bash
-npm run build
-npm run preview
+cd apps/qwik
+pnpm run build
+pnpm run preview
 ```
 
 ### Using Docker Compose (Optional)
@@ -344,7 +347,7 @@ services:
       MONGO_INITDB_DB: qwik-payload-store
 
   backend:
-    build: ./payload-qwik
+    build: ./apps/payload
     ports:
       - "3000:3000"
     environment:
@@ -357,12 +360,13 @@ services:
       - mongo
 
   frontend:
-    build: .
+    build: ./apps/qwik
     ports:
       - "5173:5173"
     environment:
-      VITE_GRAPHQL_ENDPOINT: http://backend:3000/graphql
-      VITE_PAYLOAD_API_URL: http://backend:3000
+      VITE_GRAPHQL_ENDPOINT: http://backend:3000/api/graphql
+      VITE_PAYLOAD_API_URL: http://backend:3000/api
+      VITE_API_BASE_URL: http://backend:3000/api
     depends_on:
       - backend
 ```
@@ -477,8 +481,8 @@ query GetProducts {
 9. Redirects to `/products`
 
 **Files**:
-- Backend: `payload-qwik/src/app/(payload)/api/auth/zitadel/`
-- Frontend: `src/lib/auth.ts`, `src/routes/auth/callback.tsx`
+- Backend: `apps/payload/src/app/(payload)/api/auth/`
+- Frontend: `apps/qwik/src/lib/auth.ts`, `apps/qwik/src/routes/auth/callback.tsx`
 
 ### 3. Matrix Chat
 
@@ -620,7 +624,7 @@ mongosh --uri="your-production-mongodb-uri"
 
 #### Heroku (Backend)
 ```bash
-cd payload-qwik
+cd apps/payload
 heroku create your-app-name
 heroku config:set DATABASE_URL=your-mongodb-uri
 heroku config:set PAYLOAD_SECRET=your-secret
@@ -670,7 +674,7 @@ npm run lint      # Check code quality
 npm run fmt       # Format code
 
 # Backend
-cd payload-qwik
+cd apps/payload
 npm run dev       # Start dev server
 npm run build     # Build for production
 npm run start     # Run production build
@@ -683,39 +687,21 @@ npm run generate:types  # Generate types from schema
 
 ```
 .
-├── .env.local                  # Frontend env config
-├── src/
-│   ├── routes/
-│   │   ├── index.tsx          # Home page
-│   │   ├── products/          # Product listing & details
-│   │   ├── chat/              # Chat interface
-│   │   └── auth/              # OAuth callback
-│   ├── components/
-│   │   ├── header/            # Navigation header
-│   │   ├── product-card/      # Product display
-│   │   └── chat-window/       # Chat UI
-│   ├── lib/
-│   │   ├── auth.ts            # Authentication service
-│   │   ├── graphql-client.ts  # GraphQL queries
-│   │   ├── matrix-client.ts   # Chat client
-│   │   └── env.ts             # Environment config
-│   ├── global.css             # Global styles
-│   └── root.tsx               # App root
-│
-├── payload-qwik/              # Backend (Payload CMS)
-│   ├── .env                   # Backend env config
-│   ├── src/
-│   │   ├── collections/
-│   │   │   ├── Users.ts       # User collection + Zitadel
-│   │   │   ├── Products.ts    # Product collection with variants
-│   │   │   └── Media.ts       # Media/image uploads
-│   │   ├── app/(payload)/api/
-│   │   │   ├── auth/zitadel/  # OAuth endpoints
-│   │   │   └── graphql/       # GraphQL endpoint
-│   │   ├── utilities/
-│   │   │   └── zitadel.ts     # OAuth utilities
-│   │   └── payload.config.ts  # Payload configuration
-│   └── package.json
+├── apps/
+│   ├── qwik/                  # Frontend (Qwik)
+│   │   ├── .env.local         # Frontend env config
+│   │   └── src/
+│   │       ├── routes/
+│   │       ├── components/
+│   │       └── lib/
+│   │
+│   └── payload/               # Backend (Payload CMS)
+│       ├── .env               # Backend env config
+│       ├── src/
+│       │   ├── collections/
+│       │   ├── app/(payload)/api/
+│       │   └── payload.config.ts
+│       └── package.json
 │
 ├── public/
 │   ├── manifest.json          # PWA manifest
