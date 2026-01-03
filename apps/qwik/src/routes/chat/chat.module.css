@@ -1,48 +1,53 @@
 .container {
   max-width: 1000px;
   margin: 0 auto;
-  padding: 2rem 1rem;
+  padding: 3rem 1.5rem;
   min-height: 100vh;
 }
 
 .container h1 {
-  font-size: 2rem;
+  font-size: 2.5rem;
   font-weight: 700;
-  margin-bottom: 2rem;
+  margin-bottom: 0.5rem;
   text-align: center;
+  color: #0f172a;
+  letter-spacing: -0.5px;
 }
 
 .loading,
 .error {
-  padding: 2rem;
+  padding: 2.5rem;
   text-align: center;
-  background-color: #f9fafb;
-  border-radius: 8px;
+  background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%);
+  border-radius: 12px;
   margin: 2rem 0;
+  border: 1px solid #e5e7eb;
 }
 
 .loading p {
   color: #4b5563;
-  font-size: 1rem;
+  font-size: 1.05rem;
+  font-weight: 500;
 }
 
 .error {
-  background-color: #fee;
-  border: 1px solid #fcc;
+  background: linear-gradient(135deg, #fee 0%, #fcc 100%);
+  border: 1px solid #f99;
 }
 
 .error p {
-  color: #c00;
+  color: #b00;
   margin: 0;
+  font-weight: 500;
 }
 
 @media (max-width: 768px) {
   .container {
-    padding: 1rem;
+    padding: 2rem 1rem;
   }
 
   .container h1 {
-    font-size: 1.5rem;
+    font-size: 2rem;
     margin-bottom: 1.5rem;
   }
 }
