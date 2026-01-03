@@ -62,32 +62,39 @@
 }
 
 .title {
-  font-size: 2rem;
+  font-size: 2.25rem;
   font-weight: 700;
-  margin: 0 0 0.5rem 0;
+  margin: 0 0 0.75rem 0;
   line-height: 1.2;
+  color: #0f172a;
+  letter-spacing: -0.5px;
 }
 
 .category {
   color: #6b7280;
   font-size: 0.95rem;
   text-transform: capitalize;
-  margin: 0 0 1.5rem 0;
+  margin: 0 0 1.75rem 0;
+  font-weight: 500;
 }
 
 .description {
-  margin-bottom: 2rem;
+  margin-bottom: 2.5rem;
 }
 
 .description h3 {
-  font-size: 1.1rem;
+  font-size: 1.05rem;
   font-weight: 600;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.75rem;
+  color: #0f172a;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-size: 0.9rem;
 }
 
 .description p {
   color: #4b5563;
-  line-height: 1.6;
+  line-height: 1.7;
   margin: 0;
 }
 
