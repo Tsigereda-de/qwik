@@ -178,8 +178,8 @@
 }
 
 .infoSection {
-  background-color: #f9fafb;
-  padding: 4rem 1rem;
+  background: linear-gradient(180deg, #f9fafb 0%, #f3f4f6 100%);
+  padding: 5rem 1.5rem;
   margin-top: 4rem;
   border-top: 1px solid #e5e7eb;
 }
@@ -187,27 +187,52 @@
 .infoSection h2 {
   font-size: 2.5rem;
   text-align: center;
-  margin: 0 0 3rem 0;
-  color: #000;
+  margin: 0 0 0.5rem 0;
+  color: #0f172a;
+  letter-spacing: -0.5px;
 }
 
 .techStack {
-  max-width: 800px;
-  margin: 0 auto;
+  max-width: 900px;
+  margin: 3rem auto 0;
   display: grid;
   gap: 1.5rem;
 }
 
 .techItem {
-  padding: 1.5rem;
-  background-color: #fff;
-  border-left: 4px solid #000;
-  border-radius: 4px;
+  padding: 1.75rem;
+  background: linear-gradient(135deg, #fff 0%, #f9fafb 100%);
+  border-left: 4px solid #0f172a;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  position: relative;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.06);
+}
+
+.techItem::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 3px;
+  height: 0;
+  background: linear-gradient(180deg, #1a3a52 0%, #0f172a 100%);
+  transition: height 0.3s ease;
+}
+
+.techItem:hover {
+  transform: translateX(6px);
+  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.12);
+}
+
+.techItem:hover::after {
+  height: 100%;
 }
 
 .techItem strong {
-  color: #000;
+  color: #0f172a;
   font-size: 1.05rem;
+  font-weight: 600;
 }
 
 @media (max-width: 768px) {
