@@ -229,15 +229,18 @@
 }
 
 .tags {
-  margin-top: 2rem;
+  margin-top: 2.5rem;
   padding-top: 2rem;
   border-top: 1px solid #e5e7eb;
 }
 
 .tags h3 {
-  font-size: 1.1rem;
+  font-size: 0.9rem;
   font-weight: 600;
   margin-bottom: 1rem;
+  color: #0f172a;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
 .tagsList {
@@ -248,46 +251,55 @@
 
 .tag {
   display: inline-block;
-  padding: 0.5rem 1rem;
-  background-color: #e5e7eb;
+  padding: 0.625rem 1.25rem;
+  background: linear-gradient(135deg, #e5e7eb 0%, #d1d5db 100%);
   border-radius: 999px;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   color: #4b5563;
-}
-
-.error {
-  padding: 2rem;
-  text-align: center;
-  background-color: #fee;
-  border: 1px solid #fcc;
-  border-radius: 8px;
-}
-
-.error h2 {
-  color: #c00;
-  margin-top: 0;
-}
-
-.error p {
-  color: #c00;
-  margin-bottom: 1rem;
-}
-
-.backButton {
-  padding: 0.75rem 1.5rem;
-  background-color: #000;
-  color: #fff;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
   font-weight: 500;
 }
 
+.error {
+  padding: 2.5rem;
+  text-align: center;
+  background: linear-gradient(135deg, #fee 0%, #fcc 100%);
+  border: 1px solid #f99;
+  border-radius: 12px;
+}
+
+.error h2 {
+  color: #b00;
+  margin-top: 0;
+  font-size: 1.5rem;
+}
+
+.error p {
+  color: #a00;
+  margin-bottom: 1rem;
+  font-weight: 500;
+}
+
+.backButton {
+  padding: 0.875rem 1.75rem;
+  background: linear-gradient(135deg, #0f172a 0%, #1a3a52 100%);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
 .backButton:hover {
-  background-color: #333;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 16px rgba(15, 23, 42, 0.15);
 }
 
 @media (max-width: 768px) {
+  .container {
+    padding: 2rem 1rem;
+  }
+
   .content {
     grid-template-columns: 1fr;
     gap: 2rem;
@@ -298,11 +310,11 @@
   }
 
   .title {
-    font-size: 1.5rem;
+    font-size: 1.75rem;
   }
 
   .price {
-    font-size: 1.5rem;
+    font-size: 1.75rem;
   }
 
   .variantsList {
