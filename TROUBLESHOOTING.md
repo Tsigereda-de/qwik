@@ -32,11 +32,11 @@ If you've deployed the frontend but haven't deployed the backend:
 
 1. **Deploy Payload CMS Backend**
    - See `PRODUCTION_DEPLOYMENT.md` for detailed instructions
-   - Options: Fly.io, Heroku, AWS, Railway, etc.
+   - Options: Netlify, Vercel, Heroku, AWS, Railway, etc.
 
 2. **Update Frontend Environment Variables**
-   
-   Set these in your deployment platform (Fly.io, Netlify, etc.):
+
+   Set these in your deployment platform (Netlify, Vercel, etc.):
    
    ```env
    VITE_GRAPHQL_ENDPOINT=https://your-api-domain.com/graphql
@@ -57,9 +57,10 @@ VITE_GRAPHQL_ENDPOINT=http://localhost:3001/graphql
 ```
 
 **Production deployment**:
-- Fly.io: Set in `fly.toml` or Fly dashboard
 - Netlify: Set in Build & deploy settings → Environment
 - Vercel: Set in Settings → Environment Variables
+- Heroku: Set via `heroku config:set` or dashboard
+- AWS: Set in application environment variables
 
 ---
 

@@ -30,15 +30,33 @@ export const POST = async (request: Request) => {
       )
     }
 
+    // Read state and code_verifier from cookies (set during login)
+    const cookieHeader = request.headers.get('cookie') || ''
+    const cookies = Object.fromEntries(
+      cookieHeader.split(';').map((c) => {
+        const [k, ...v] = c.trim().split('=')
+        return [k, v.join('=')]
+      }),
+    )
+
+    const codeVerifier = cookies['zitadel_code_verifier']
+    const stateCookie = cookies['zitadel_state']
+
+    if (!codeVerifier) {
+      return Response.json(
+        { error: 'Missing PKCE code verifier' },
+        { status: 400 },
+      )
+    }
+
     const payload = await getPayload({ config })
 
     // Get environment variables
     const zitadelApiUrl = process.env.ZITADEL_API_URL
     const clientId = process.env.ZITADEL_CLIENT_ID
-    const clientSecret = process.env.ZITADEL_CLIENT_SECRET
     const redirectUri = process.env.ZITADEL_REDIRECT_URI
 
-    if (!zitadelApiUrl || !clientId || !clientSecret || !redirectUri) {
+    if (!zitadelApiUrl || !clientId || !redirectUri) {
       console.error('Missing Zitadel environment variables')
       return Response.json(
         { error: 'Server configuration error' },
@@ -58,7 +76,7 @@ export const POST = async (request: Request) => {
           grant_type: 'authorization_code',
           code,
           client_id: clientId,
-          client_secret: clientSecret,
+          code_verifier: codeVerifier,
           redirect_uri: redirectUri,
         }).toString(),
       },
@@ -112,7 +130,7 @@ export const POST = async (request: Request) => {
         id: existingUser.id,
         data: {
           name: userInfo.name || `${userInfo.given_name || ''} ${userInfo.family_name || ''}`.trim(),
-          zitadelProfile: userInfo,
+          zitadelProfile: userInfo as unknown as Record<string, unknown>,
           isActive: true,
         },
       })
@@ -124,7 +142,7 @@ export const POST = async (request: Request) => {
           email: userInfo.email,
           name: userInfo.name || `${userInfo.given_name || ''} ${userInfo.family_name || ''}`.trim(),
           zitadelId: userInfo.sub,
-          zitadelProfile: userInfo,
+          zitadelProfile: userInfo as unknown as Record<string, unknown>,
           password: crypto.randomUUID(),
           isActive: true,
         },

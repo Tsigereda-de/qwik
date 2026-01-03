@@ -112,7 +112,7 @@ export const POST = async (request: Request) => {
         id: existingUser.id,
         data: {
           name: userInfo.name || `${userInfo.given_name || ''} ${userInfo.family_name || ''}`.trim(),
-          zitadelProfile: userInfo,
+          zitadelProfile: userInfo as unknown as Record<string, unknown>,
           isActive: true,
         },
       })
@@ -124,7 +124,7 @@ export const POST = async (request: Request) => {
           email: userInfo.email,
           name: userInfo.name || `${userInfo.given_name || ''} ${userInfo.family_name || ''}`.trim(),
           zitadelId: userInfo.sub,
-          zitadelProfile: userInfo,
+          zitadelProfile: userInfo as unknown as Record<string, unknown>,
           password: crypto.randomUUID(),
           isActive: true,
         },

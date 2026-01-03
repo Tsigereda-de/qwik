@@ -131,8 +131,8 @@ sudo systemctl start mongod
 ```env
 DATABASE_URL=mongodb://admin:password@localhost:27017/qwik-payload-store?authSource=admin
 PAYLOAD_SECRET=your-super-secret-32-character-key-minimum-32-chars!
-ZITADEL_API_URL=https://negus.us1.zitadel.cloud
-ZITADEL_CLIENT_ID=353171717931146367
+ZITADEL_API_URL=https://us1.zitadel.cloud
+ZITADEL_CLIENT_ID=353170497439257993
 ZITADEL_CLIENT_SECRET=your-zitadel-client-secret
 ZITADEL_REDIRECT_URI=http://localhost:3000/api/auth/zitadel/callback
 ```
@@ -142,8 +142,8 @@ ZITADEL_REDIRECT_URI=http://localhost:3000/api/auth/zitadel/callback
 VITE_GRAPHQL_ENDPOINT=http://localhost:3000/graphql
 VITE_PAYLOAD_API_URL=http://localhost:3000
 VITE_API_BASE_URL=http://localhost:3000/api
-VITE_ZITADEL_API_URL=https://negus.us1.zitadel.cloud
-VITE_ZITADEL_CLIENT_ID=353171717931146367
+VITE_ZITADEL_API_URL=https://us1.zitadel.cloud
+VITE_ZITADEL_CLIENT_ID=353170497439257993
 VITE_ZITADEL_REDIRECT_URI=http://localhost:5173/auth/callback
 VITE_MATRIX_HOMESERVER_URL=https://matrix.org
 ```

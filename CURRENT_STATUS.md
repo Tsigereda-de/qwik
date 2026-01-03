@@ -76,10 +76,10 @@ If you want to deploy to production:
 
 1. **Deploy Payload CMS Backend**
    - See `PRODUCTION_DEPLOYMENT.md`
-   - Recommended: Fly.io, Heroku, or AWS
+   - Recommended platforms: Heroku, AWS, Railway, or Netlify
 
 2. **Deploy Qwik Frontend**
-   - Already deployed to Fly.io
+   - Recommended platforms: Netlify, Vercel, or AWS
    - Update environment variables with backend URL
 
 3. **Configure External Services**

@@ -23,9 +23,9 @@ const getZitadelRedirectUri = (): string => {
 
 export const env = {
   // API Endpoints
-  graphqlEndpoint: import.meta.env.VITE_GRAPHQL_ENDPOINT || 'http://localhost:3001/graphql',
-  payloadApiUrl: import.meta.env.VITE_PAYLOAD_API_URL || 'http://localhost:3001',
-  apiBaseUrl: import.meta.env.VITE_API_BASE_URL || 'http://localhost:3001/api',
+  graphqlEndpoint: import.meta.env.VITE_GRAPHQL_ENDPOINT || 'http://localhost:3000/api/graphql',
+  payloadApiUrl: import.meta.env.VITE_PAYLOAD_API_URL || 'http://localhost:3000',
+  apiBaseUrl: import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000/api',
 
   // Zitadel OAuth
   zitadelApiUrl: import.meta.env.VITE_ZITADEL_API_URL || '',

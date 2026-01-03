@@ -18,19 +18,7 @@ npm run build
 
 This creates an optimized production build in the `dist/` directory.
 
-### Deploy to Fly.io (Current Setup)
-
-The frontend is currently deployed on Fly.io. To deploy updates:
-
-```bash
-# Install Fly CLI if not installed
-curl -L https://fly.io/install.sh | sh
-
-# Deploy
-flyctl deploy
-```
-
-### Deploy to Other Platforms
+### Deploy to Netlify
 
 **Netlify:**
 ```bash
@@ -117,24 +105,6 @@ heroku config:set CORS_ORIGIN="https://your-frontend-domain.com"
 
 # Deploy
 git push heroku main
-```
-
-### Deploy to Fly.io
-
-```bash
-cd payload-cms
-
-# Login to Fly
-fly auth login
-
-# Create app
-fly launch
-
-# Add PostgreSQL database
-fly postgres create
-
-# Deploy
-fly deploy
 ```
 
 ### Deploy to Railway
@@ -245,27 +215,22 @@ NODE_ENV=production
 Point your domain to your hosting provider:
 
 ```
-Frontend:   frontend.yourdomain.com -> Fly.io / Netlify / Your provider
-Backend:    api.yourdomain.com     -> Heroku / Fly.io / AWS / Your provider
+Frontend:   frontend.yourdomain.com -> Netlify / Vercel / Your provider
+Backend:    api.yourdomain.com     -> Heroku / Railway / AWS / Your provider
 ```
 
 ### SSL/TLS Certificates
 
 Most hosting platforms provide free SSL:
-- **Fly.io**: Automatic
 - **Netlify**: Automatic
 - **Vercel**: Automatic
+- **Railway**: Automatic
 - **Heroku**: Free or paid certificates
 - **Let's Encrypt**: Free (setup on server)
 
 ## Monitoring & Logs
 
 ### View Logs
-
-**Fly.io:**
-```bash
-fly logs -a your-app-name
-```
 
 **Heroku:**
 ```bash
