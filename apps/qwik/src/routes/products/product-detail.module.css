@@ -1,53 +1,60 @@
 .container {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 2rem 1rem;
+  padding: 3rem 1.5rem;
 }
 
 .backLink {
   background: none;
   border: none;
   color: #4b5563;
-  font-size: 1rem;
+  font-size: 0.95rem;
   cursor: pointer;
-  padding: 0;
+  padding: 0.5rem 0;
   margin-bottom: 2rem;
-  transition: color 0.2s;
+  transition: all 0.2s ease;
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 .backLink:hover {
-  color: #000;
-  text-decoration: underline;
+  color: #0f172a;
+  transform: translateX(-2px);
 }
 
 .content {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 3rem;
+  gap: 3.5rem;
   align-items: start;
 }
 
 .imageSection {
   position: sticky;
-  top: 100px;
+  top: 120px;
 }
 
 .image {
   width: 100%;
   height: auto;
-  border-radius: 8px;
+  border-radius: 12px;
+  box-shadow: 0 12px 32px rgba(15, 23, 42, 0.1);
 }
 
 .imagePlaceholder {
   width: 100%;
   aspect-ratio: 1;
-  background-color: #f3f4f6;
-  border-radius: 8px;
+  background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+  border-radius: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
   color: #9ca3af;
   font-size: 1.1rem;
+  font-weight: 500;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
 }
 
 .detailsSection {
