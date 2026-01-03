@@ -362,6 +362,10 @@
     font-size: 2.25rem;
   }
 
+  .christmasEmoji {
+    font-size: 2.5rem;
+  }
+
   .heroContent p {
     font-size: 1.05rem;
   }
@@ -379,11 +383,12 @@
 
   .featuresSection,
   .infoSection {
-    padding: 0 1rem;
+    padding: 3rem 1rem;
   }
 
   .featuresSection h2,
-  .infoSection h2 {
+  .infoSection h2,
+  .festiveSection h2 {
     font-size: 2rem;
   }
 
@@ -396,11 +401,27 @@
     padding: 1.75rem;
   }
 
+  .featureEmoji {
+    font-size: 2rem;
+  }
+
   .techStack {
     gap: 1rem;
   }
 
   .techItem {
     padding: 1.5rem;
+  }
+
+  .festiveSection {
+    padding: 3rem 1rem;
+  }
+
+  .festiveContent h2 {
+    font-size: 1.75rem;
+  }
+
+  .festiveContent p {
+    font-size: 1rem;
   }
 }
