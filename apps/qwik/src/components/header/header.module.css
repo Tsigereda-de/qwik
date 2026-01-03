@@ -94,22 +94,22 @@
 .loginBtn,
 .logoutBtn {
   padding: 0.625rem 1.25rem;
-  border: 1px solid #0f172a;
-  background-color: #0f172a;
+  border: 2px solid #c41e3a;
+  background: linear-gradient(135deg, #c41e3a 0%, #a01729 100%);
   color: #fff;
-  border-radius: 6px;
+  border-radius: 8px;
   cursor: pointer;
-  font-weight: 500;
+  font-weight: 600;
   font-size: 0.9rem;
   transition: all 0.3s ease;
 }
 
 .loginBtn:hover,
 .logoutBtn:hover {
-  background-color: #1a3a52;
-  border-color: #1a3a52;
-  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.15);
-  transform: translateY(-1px);
+  background: linear-gradient(135deg, #a01729 0%, #7a0f1f 100%);
+  border-color: #ffd700;
+  box-shadow: 0 6px 16px rgba(196, 30, 58, 0.2);
+  transform: translateY(-2px);
 }
 
 .loginBtn:active,
