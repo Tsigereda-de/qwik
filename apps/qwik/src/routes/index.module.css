@@ -1,55 +1,83 @@
 .hero {
-  background: linear-gradient(135deg, #000 0%, #333 100%);
+  background: linear-gradient(135deg, #0f172a 0%, #1a3a52 50%, #2d5a78 100%);
   color: #fff;
-  padding: 6rem 1rem;
+  padding: 7rem 1.5rem;
   text-align: center;
-  min-height: 500px;
+  min-height: 600px;
   display: flex;
   align-items: center;
   justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(circle at 20% 50%, rgba(255, 255, 255, 0.05) 0%, transparent 50%),
+              radial-gradient(circle at 80% 80%, rgba(255, 255, 255, 0.03) 0%, transparent 50%);
+  pointer-events: none;
+}
+
+.heroContent {
+  position: relative;
+  z-index: 1;
+  max-width: 700px;
+  animation: fadeInUp 0.8s ease-out;
 }
 
 .heroContent h1 {
-  font-size: 3rem;
+  font-size: 3.5rem;
   font-weight: 700;
-  margin: 0 0 1rem 0;
-  line-height: 1.2;
+  margin: 0 0 1.25rem 0;
+  line-height: 1.1;
+  letter-spacing: -1px;
+  color: #fff;
 }
 
 .heroContent p {
-  font-size: 1.25rem;
-  color: #ccc;
-  margin: 0 0 2rem 0;
-  max-width: 600px;
-  line-height: 1.6;
+  font-size: 1.3rem;
+  color: #cce5ff;
+  margin: 0 0 2.5rem 0;
+  line-height: 1.7;
+  font-weight: 300;
 }
 
 .ctaButtons {
   display: flex;
   justify-content: center;
-  gap: 1rem;
+  gap: 1.25rem;
   flex-wrap: wrap;
 }
 
 .primaryButton,
 .secondaryButton {
-  padding: 1rem 2rem;
-  border-radius: 6px;
+  padding: 1rem 2.5rem;
+  border-radius: 8px;
   text-decoration: none;
   font-weight: 600;
-  font-size: 1.1rem;
-  transition: all 0.2s;
+  font-size: 1.05rem;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   display: inline-block;
+  border: 2px solid transparent;
 }
 
 .primaryButton {
   background-color: #fff;
-  color: #000;
+  color: #0f172a;
 }
 
 .primaryButton:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+  transform: translateY(-3px);
+  box-shadow: 0 15px 40px rgba(255, 255, 255, 0.2);
+}
+
+.primaryButton:active {
+  transform: translateY(-1px);
 }
 
 .secondaryButton {
@@ -60,8 +88,24 @@
 
 .secondaryButton:hover {
   background-color: #fff;
-  color: #000;
-  transform: translateY(-2px);
+  color: #0f172a;
+  transform: translateY(-3px);
+  box-shadow: 0 15px 40px rgba(255, 255, 255, 0.2);
+}
+
+.secondaryButton:active {
+  transform: translateY(-1px);
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .featuresSection {
